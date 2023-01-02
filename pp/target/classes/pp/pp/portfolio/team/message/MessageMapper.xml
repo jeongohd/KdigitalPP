@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.message.MessageMapper"> <!-- xml이 있는 위치랑 정확히 일치해야함 -->
+
+	<insert id="insert" parameterType="pp.pp.portfolio.team.message.MessageVO">
+		INSERT INTO projectdataro.pmessage(
+			send_member_no, receive_member_no, message_content, senddate
+		) VALUES (
+			#{send_member_no}, #{receive_member_no}, #{message_content}, now()
+		)
+	</insert>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

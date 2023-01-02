@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pp.pp.portfolio.api.ApiBoardMapper">
+	<select id="list" parameterType="pp.pp.portfolio.api.ApiBoardVO" resultType="pp.pp.portfolio.api.ApiBoardVO">
+		SELECT no,title,viewcount,member_no,regdate FROM portfolio.api
+		<where>
+			<if test='searchType == "title"'>
+				title LIKE '%${search}%'
+			</if>
+			<if test='searchType == "all"'>
+				title LIKE '%${search}%' or content LIKE '%${search}%'
+			</if>
+		</where>
+		Limit #{startIdx},#{pageRow}
+	</select>
+	
+	<select id="count" resultType="java.lang.Integer">
+		select count(*) from portfolio.api
+	</select>
+</mapper>

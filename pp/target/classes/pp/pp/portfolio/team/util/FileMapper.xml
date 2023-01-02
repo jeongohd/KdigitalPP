@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.util.FileMapper">
+	<!-- 진경 여행게시판 글쓰기 사진 등록 -->
+	<insert id="fileupload" parameterType="pp.pp.portfolio.team.util.FileVO" >
+		insert into projectdataro.pfile(board_name,board_no,filename_org,filename_server,course_no)
+		VALUES ('여행게시판',#{board_no},#{filename_org},#{filename_server},#{course_no});
+	</insert>
+	<!-- 진경 여행게시판 글수정 사진 불러오기 -->
+	<select id="fileUpdate" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.util.FileVO">
+		SELECT * FROM projectdataro.pfile WHERE board_no=${board_no} and course_no=${course_no}
+	</select>
+</mapper>

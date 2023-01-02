@@ -1,0 +1,21 @@
+@charset "utf-8";
+/*Reset Code*/
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,
+address,big,cite,code,del,dfn,em,font,img,ins,
+q,s,samp,small,strike,strong,sub,sup,tt,var,b,
+u,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:none 0;border-spacing:0}
+body{font-family:'Noto Sans KR',Sans-serif;background-color:#fefefe;line-height:1;font-weight:400;letter-spacing:0;color:#121212}
+header,section,article,nav,aside,footer,address{margin:0;padding:0;border:none 0;border-spacing:0}
+img,fieldset,iframe{border:0}
+ol,ul,li{list-style:none}
+input,select,button,img{vertical-align:middle;margin:0;padding:0;font-family:'Noto Sans KR',Sans-serif;}
+select, textarea{font-family:sans-serif;outline:none;font-family:'Noto Sans KR',Sans-serif;}
+i,em,address{font-style:normal}
+button{margin:0;padding:0;cursor:pointer}
+a{color:#121212}
+a:link,a:visited{text-decoration:none;}
+a:hover{text-decoration:none}
+legend,caption{display:none}
+input:focus,button:focus{outline:none}
+table{width:100%;border-collapse:collapse;border-spacing:0;table-layout:fixed}
+*{box-sizing:border-box}

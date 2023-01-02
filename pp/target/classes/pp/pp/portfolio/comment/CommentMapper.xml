@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pp.pp.portfolio.comment.CommentMapper">
+	<select id="list" resultType="pp.pp.portfolio.comment.CommentVO">
+	 	SELECT *,
+	 	(SELECT COUNT(*) FROM comment WHERE boardno=portfolio.commentboard.no) as count
+	 	 FROM portfolio.commentboard
+	</select>
+	
+	<select id="view" parameterType="java.lang.Integer" resultType="pp.pp.portfolio.comment.CommentVO">
+		SELECT * FROM portfolio.commentboard WHERE no = #{no} 
+	</select>
+
+	<select id="commentList" parameterType="pp.pp.portfolio.comment.CommentVO" resultType="pp.pp.portfolio.comment.CommentVO">
+		SELECT * FROM comment WHERE boardno = #{no} ORDER BY gno desc, ono asc Limit ${startIdx}, ${pageRow} 
+	</select>
+	<insert id="insert" parameterType="pp.pp.portfolio.comment.CommentVO" >
+		INSERT INTO comment (comment, cregdate, name, password, boardno, gno, ono, nested) 
+		VALUES (#{comment}, NOW(), #{name}, #{password}, #{boardno},#{gno}, #{ono}, #{nested})
+		<selectKey keyProperty="cno" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="gnoUpdate" parameterType="int">
+		UPDATE comment SET gno=#{cno} WHERE cno=#{cno}
+	</update>
+	
+	<update id="onoUpdate" parameterType="pp.pp.portfolio.comment.CommentVO">
+		UPDATE comment SET ono = ono+1 WHERE gno=#{gno} AND ono>#{ono}
+	</update>
+	
+	<update id="update" parameterType="java.lang.Integer">
+		UPDATE comment SET comment=${comment},regdate=Now() WHERE no=${no}
+	</update>
+	
+	<delete id="delete"  parameterType="java.lang.Integer">
+		DELETE FROM comment WHERE cno=#{cno}
+	</delete>
+	
+	<select id="count" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM comment WHERE boardno=#{boardno}
+	</select>
+	
+	<insert id="commentInsert" parameterType="pp.pp.portfolio.comment.CommentVO" >
+		INSERT INTO comment (comment, cregdate, name, password, boardno, gno, ono, nested) 
+		VALUES (#{comment}, NOW(), #{name}, #{password}, #{boardno},#{gno}, #{ono}, #{nested})
+	</insert>
+	
+	<update id="viewCount" parameterType="java.lang.Integer">
+		UPDATE portfolio.commentboard set viewcount = viewcount+1 WHERE no=#{no}
+	</update>
+</mapper>

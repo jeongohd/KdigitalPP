@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.member.MemberMapper">
+
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 정길 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+
+
+	<!-- 회원등록 -->
+	<insert id="insert" parameterType="pp.pp.portfolio.team.member.MemberVO">
+			INSERT INTO projectdataro.pmember (
+				id, nickname, pwd, email, m_filename_org, m_filename_server, regdate
+			) VALUES (
+				#{id}, #{nickname}, md5(#{pwd}), #{email}, #{m_filename_org}, #{m_filename_server}, NOW()
+			)
+	</insert>
+	
+	
+	<!-- 아이디 중복체크 -->
+	<select id="checkId" resultType="int" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		select count(*) from projectdataro.pmember where id = #{id}
+	</select>
+
+	
+	<!-- 이메일 중복체크 -->
+	<select id="checkEmail" resultType="int" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		select count(*) from projectdataro.pmember where email = #{email}
+	</select>
+	
+	
+	<!-- 로그인 할 때, 아이디 패스워드 확인용 -->
+	<select id="checkIdPw" resultType="pp.pp.portfolio.team.member.MemberVO" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		select * from projectdataro.pmember where id = #{id} and pwd = md5(#{pwd})
+	</select>
+	
+	
+	<!-- 아이디로 해당하는 개인정보 가져오기 -->
+	<select id="myInfo" resultType="pp.pp.portfolio.team.member.MemberVO">
+		select * from projectdataro.pmember where id = #{id}
+	</select>
+	
+	
+	<!-- 회원번호로 해당하는 개인정보 가져오기 -->
+	<select id="myInfo2" resultType="pp.pp.portfolio.team.member.MemberVO">
+		select * from projectdataro.pmember where member_no = #{member_no}
+	</select>
+	
+	
+	<!-- 회원정보수정 -->
+	<update id="editUserInfo" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		update projectdataro.pmember set
+			nickname = #{nickname}
+			, pwd = md5(#{pwd})
+			, email = #{email}
+			<if test="m_filename_org != null">
+			, m_filename_org = #{m_filename_org}
+			, m_filename_server = #{m_filename_server}
+			</if>
+		where id = #{id}
+	</update> 
+	
+	
+	<!-- 아이디 찾기 -->
+	<select id="findId" parameterType="pp.pp.portfolio.team.member.MemberVO" resultType="pp.pp.portfolio.team.member.MemberVO">
+		select * from projectdataro.pmember 
+		where email=#{email} and nickname=#{nickname}
+	</select>
+	
+	
+	<!-- 비밀번호찾기화면에서 입력한 아이디와 이메일이 디비에 저장되어 있나 확인 -->
+	<select id="findPwd" parameterType="pp.pp.portfolio.team.member.MemberVO" resultType="pp.pp.portfolio.team.member.MemberVO">
+		select * from projectdataro.pmember 
+		where id=#{id} and email=#{email}
+	</select>
+	
+	
+	<!-- 조건에 맞으면(사실 조건은 필요없음) 비밀번호 업데이트 -->
+	<update id="updateTempPwd" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		update projectdataro.pmember set pwd = md5(#{pwd}) where id=#{id} and email=#{email}
+	</update>
+	
+	
+	<!-- 회원탈퇴 -->
+	<delete id="deleteId" parameterType="pp.pp.portfolio.team.member.MemberVO">
+		delete from projectdataro.pmember where id = #{id}
+	</delete>
+	
+	
+	<!-- 읽지않은 쪽지갯수 -->
+	<select id="alarmForMessage" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="int">
+		select count(*) from projectdataro.pmessage p where receive_member_no=#{receive_member_no} and readdate is null
+	</select>
+	<!-- 읽지않은 쪽지내용 -->
+	<select id="unreadMsgContent" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="pp.pp.portfolio.team.message.MessageVO">
+			select 
+    		m.nickname,
+    		m.id,
+    		me.message_no,
+    		me.message_content,
+    		me.send_member_no
+		from projectdataro.pmessage me join projectdataro.pmember m  
+		on m.member_no = me.send_member_no where receive_member_no=#{receive_member_no} and readdate is null 
+		order by senddate desc;
+	</select>
+	<!-- 안읽은 쪽지 읽음처리 -->
+	<update id="readUpdate" parameterType="pp.pp.portfolio.team.message.MessageVO">
+		UPDATE `projectdataro.pmessage` SET `readdate` = now() WHERE message_no = #{message_no} and receive_member_no=#{receive_member_no}
+	</update>
+	<!-- 쪽지 삭제 -->
+	<update id="deleteMsg" parameterType="int">
+		delete from projectdataro.pmessage where message_no = #{message_no};
+	</update>
+	
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 정길 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+
+</mapper>

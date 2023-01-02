@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pp.pp.portfolio.reply.ReplyMapper">
+	<insert id='insert' parameterType="pp.pp.portfolio.reply.ReplyVO">
+		INSERT INTO portfolio.reply (title,content,regdate,viewcount,gno,ono,nested)
+		VALUES (#{title},#{content},NOW(),0,#{gno},#{ono},#{nested})
+		<selectKey keyProperty="no" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="gnoUpdate" parameterType="int">
+		UPDATE portfolio.reply SET gno=#{gno} WHERE no=#{gno}
+	</update>
+	
+	<update id="onoUpdate" parameterType="pp.pp.portfolio.reply.ReplyVO">
+		UPDATE portfolio.reply SET ono = ono+1 WHERE gno=#{gno} and ono>#{ono}
+	</update>
+	
+	<select id="list" parameterType="pp.pp.portfolio.reply.ReplyVO" resultType="pp.pp.portfolio.reply.ReplyVO">
+	 	SELECT * FROM portfolio.reply
+	 	ORDER BY gno desc, ono asc
+	 	Limit ${startIdx},${pageRow};
+	</select>
+	
+	<update id="update" parameterType="pp.pp.portfolio.reply.ReplyVO">
+		UPDATE portfolio.reply SET 
+			title=#{title},content=#{content},regdate=NOW()
+		WHERE no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM portfolio.reply WHERE no = #{no}
+	</delete>
+	
+	<select id="view" parameterType="java.lang.Integer" resultType="pp.pp.portfolio.reply.ReplyVO">
+		SELECT * FROM portfolio.reply WHERE no = #{no} 
+	</select>
+	
+	<update id="updateViewcount" parameterType="java.lang.Integer">
+		UPDATE portfolio.reply set viewcount=viewcount+1 WHERE no = #{no} 
+	</update>
+	
+	<select id="count" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM portfolio.reply;
+	</select>
+	
+	<insert id="reply" parameterType="pp.pp.portfolio.reply.ReplyVO">
+		INSERT INTO portfolio.reply (title,content,regdate,viewcount,gno,ono,nested)
+		VALUES (#{title},#{content},NOW(),0,#{gno},#{ono},#{nested})
+	</insert>
+</mapper>

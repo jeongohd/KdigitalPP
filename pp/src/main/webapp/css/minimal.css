@@ -1,0 +1,46 @@
+/* iCheck plugin Minimal skin,black----------------------------------- */
+
+/* 기본 디자인 */
+/* radio */
+.iradio_change {display:inline-block;*display:inline;vertical-align:middle;margin-right:5px;padding:0;width:24px;height:24px;background:url(/img/minimal.png) no-repeat;border:none;cursor:pointer;margin-top:-3px;background-position:0 0;}
+.iradio_change.checked {background-position:-24px 0;}
+.iradio_change.disabled {background-position:-48px 0;cursor:default;}
+.iradio_change.checked.disabled {background-position: -72px 0;}
+/* HiDPI support */
+@media all and (max-width:768px) {
+	.iradio_change {width:30px;height:30px;margin-right:10px;background-image:url(/img/minimal@2x.png);-webkit-background-size:120px 30px;background-size:120px 30px;}
+	.iradio_change.checked {background-position: -30px 0;}
+	.iradio_change.disabled {background-position:-60px 0;cursor:default;}
+	.iradio_change.checked.disabled {background-position: -90px 0;}
+}
+
+.iradio_minimal {display:inline-block;*display:inline;vertical-align:middle;margin-right:5px;padding:0;width:16px;height:16px;background:url(/pp/img/minimal_2.png) no-repeat left top;border:none;cursor:pointer;margin-top:-3px;background-position:0 0;}
+.iradio_minimal.checked {background-position:-16px top}
+.iradio_minimal.disabled {background-position:-32px 0;cursor:default;}
+.iradio_minimal.checked.disabled {background-position: -72px 0;}
+/* HiDPI support */
+@media all and (max-width:768px) {
+	.iradio_minimal {width:30px;height:30px;margin-right:10px;background-image:url(/img/minimal@2x.png);-webkit-background-size:120px 30px;background-size:120px 30px;}
+	.iradio_minimal.checked {background-position: -30px 0;}
+	.iradio_minimal.disabled {background-position:-60px 0;cursor:default;}
+	.iradio_minimal.checked.disabled {background-position: -90px 0;}
+}
+@media all and (max-width:768px){ /* 임시 */
+	.iradio_minimal {width:30px;height:30px;margin-right:10px;background-image:url(/img/minimal@2x.png);-webkit-background-size:120px 30px;background-size:120px 30px;}
+	.iradio_minimal.checked {background-position: -30px 0;}
+	.iradio_minimal.disabled {background-position:-60px 0;cursor:default;}
+	.iradio_minimal.checked.disabled {background-position: -90px 0;}
+}
+
+/* checkbox */
+.icheckbox_minimal {display:inline-block;*display:inline;vertical-align:middle;margin-right:5px;padding:0;width:20px;height:20px;background:url(/img/btn_check.png) no-repeat;border:none;cursor:pointer;margin-top:-3px;background-position:0 0;}
+.icheckbox_minimal.checked {background-position:-20px 0;}
+.icheckbox_minimal.disabled {background-position:-40px 0;cursor:default;}
+.icheckbox_minimal.checked.disabled {background-position:-60px 0;}
+/* HiDPI support */
+@media all and (max-width:768px) {
+	.icheckbox_minimal {width:30px;height:30px;margin-right:10px;background-image:url(/img/btn_check@2x.png);-webkit-background-size:200px 30px;background-size:120px 30px;}
+	.icheckbox_minimal.checked {background-position: -30px 0;}
+	.icheckbox_minimal.disabled{background-position: -60px 0;}
+	.icheckbox_minimal.checked.disabled {background-position:-90px 0;}
+}

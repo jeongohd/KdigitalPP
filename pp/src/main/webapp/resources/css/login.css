@@ -1,0 +1,130 @@
+/*common*/
+#wrap{text-align: center;}
+#wrap .content{display: inline-block;width: 1200px;}
+/*login*/
+.login table tr{text-align:center; margin: 0 auto;}
+
+.login form h1{text-align:center; padding-bottom:30px; padding-top: 20px;}
+.login form h2 {text-align:center; padding-bottom:30px; padding-top: 20px;}
+#wrap .login {display: block; margin: 0 auto; width: 700;}
+#wrap .page{position:relative; top:180px;}
+#wrap .page #goMain{position:relative; right:310px; bottom:50px;}
+.page table tr td{padding-bottom:10px;} 
+.login #goMain{width:40px; position:relative; right:270px;}
+.page table tr th{text-align:center; }
+.page table tr td h5{color:gray;}
+.page table {
+	border-radius: 20px;
+    box-shadow: 2px 2px 5px #d3d3d3, -2px -2px 5px #d3d3d3;
+
+}
+
+.titlee a:hover{
+	cursor:pointer;
+	color: #3c40c6;
+	
+}
+
+#wrap .Fidpw table {
+	position:relative;
+	right:260px;
+}
+
+#wrap .content table tr td{
+     white-space: nowrap; /*nowrap 줄바꿈을 하지 않음.*/
+     overflow: hidden;
+     text-overflow: ellipsis;
+     padding: 5px 10px;
+}
+
+    
+#wrap .border {
+	padding-top: 20px;
+	border-radius: 20px;
+    box-shadow: 2px 2px 5px #d3d3d3, -2px -2px 5px #d3d3d3;
+	padding: 10px;
+	position: relative;
+    top: 50px;
+}
+#wrap .bord {
+	padding-top: 20px;
+	border-radius: 20px;
+    box-shadow: 2px 2px 5px #d3d3d3, -2px -2px 5px #d3d3d3;
+	padding: 10px;
+	position: relative;
+    top: 50px;
+    width:700px;
+}
+
+a img #gohome {
+	position:relative;
+	right:50px;
+}
+
+.page .leaveBtn {background-color:#616BEE;
+						color:#fff;
+						border-radius:5px;
+						font-size:14px;
+						padding:7px;
+						display:block;
+						position:relative;
+						left:140px;}
+
+#wrap .Fidpw table tr td input{height:35px; border-width: thin; border-radius: 5px; margin: 3px; padding: 3px;}
+
+.login table .Btn{width: 150px; height:30px;}
+.content table tr td input{height:35px; border-width: thin; border-radius: 5px; margin: 0 3px; padding: 3px;}
+.content table tr td #btn_leave{height:33px; position:relative; left:300px}
+
+.login #backBtn{width:70px; position:relative; right:200px; display:inline-block;}
+.login #setbtn{width:40px; top:5px; position:relative; left:250px;}
+.login #idImg{position:relative; margin-bottom:30px; right:110px; border-radius:30px; width:300px; display:inline-block; }
+.login #nic{display:inline-block; position:relative; } 
+.login form #lo{display:inline-block; position:relative; bottom:7px;}
+
+
+
+
+
+.login .bt6{width:50px; padding-right: 20px;}
+
+/* 모달 */
+.modal {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.4);
+    top:0;
+    left: 0;
+    height: 100vh;
+    width:100%;
+    display: none;
+}
+
+.modal-content{
+    background-color: #fff;
+    width: 400px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+.btn-close{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.btn-guide {
+    background-color: blueviolet;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 7px;
+    display: block;
+}
+
+
+

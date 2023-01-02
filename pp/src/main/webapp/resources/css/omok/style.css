@@ -1,0 +1,90 @@
+@charset "UTF-8";
+*{box-sizing: border-box;}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,button,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;font-family: 'Noto Sans KR', sans-serif;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/*style*/
+.wrap{display:inline-block;width:100%;height:100vh;text-align:center;position:relative;background-image:url(../../omok_img/bg.jpg);background-size: contain;}
+.cnt_wrap{display:inline-block;position:absolute;width: 50%;border-radius:20px;top:50%;left:50%;transform: translate(-50%, -50%);border:2px solid #a98a65;background:#fff;padding:20px}
+.cnt_wrap.auto{width:auto}
+.cnt_wrap h2{font-size:100px;color: #a98a65;font-family: 'Black Han Sans', sans-serif;font-family: 'Dongle', sans-serif;}
+.cnt_wrap button{display: inline-block;border: none;background: none;cursor: pointer;margin:20px 10px;border:2px solid #fff;position: relative}
+.cnt_wrap button img{width: 100%;height:100%;width:200px;height:200px;border-radius: 50%}
+.cnt_wrap button b{display:none;font-size: 21px;position: absolute;width: 200px;height: 200px;top:0;left:0;line-height: 200px;background:#b5551e;opacity:0.7;color:#fff;border-radius:50%;font-weight:bold}
+.cnt_wrap button:hover b{display:block}
+.cnt_wrap #div{display:inline-block}
+.cnt_wrap .notice span{margin:0 30px}
+.cnt_wrap .notice span b{font-weight: bold;}
+.endbtn input{display:inline-block;background: #ffff;color:#d67c49;font-size: 15px;padding: 10px 20px;border:2px solid #d67c49;border-radius: 50px;cursor: pointer;font-weight:bold;margin-right: 28px;}
+.endbtn input:hover{background: #d67c49;border:2px solid #d67c49;color:#fff;font-weight:bold}
+.cnt_wrap .login{display: inline-block;font-size: 20px;} 
+.cnt_wrap .login h3{font-size: 20px;font-weight:bold;padding:40px 0 30px 0;color: #795735;} 
+.cnt_wrap .login table th{vertical-align: middle;text-align: left;color:#a98a65}
+.cnt_wrap .login table td{padding:10px 0;vertical-align: middle;padding-left: 10px;}
+.cnt_wrap .login table td input{font-size: 20px;padding:5px;border:1px solid #a98a65}
+.cnt_wrap .login td #btn1{margin-left:10px;}
+.cnt_wrap .login td #btn1,.cnt_wrap .login td #btn2{border: 1px solid #795735;background: #795735;color: #fff;border-radius:30px;font-size: 15px;padding: 5px 10px;cursor: pointer;}
+.cnt_wrap .login.left .login_btn{margin-top: 10px;}
+.cnt_wrap .login.left .login_btn button{background: #a98a65;border-radius: 30px;width:40%;padding: 10px 0;color:#fff;margin: 0;}
+.cnt_wrap .login.left .login_btn form{display: inline;}
+.cnt_wrap .login.left .login_btn form button{background:#d67c49 ;}
+.cnt_wrap .login.right{float: right;}
+.cnt_wrap.join form{display: inline-block;}
+.cnt_wrap.join #sss{display: inline-block;width: 100%;margin-top:10px;}
+.cnt_wrap.join #sss input{margin-bottom: 10px;width: 100%;}
+.cnt_wrap.join #sss input[type="submit"]{width: 100%;border-radius: 30px;background: #795735;color:#fff;cursor: pointer;}
+.cnt_wrap.join input{font-size: 20px;padding:5px;border:1px solid #a98a65} 
+.cnt_wrap.join #btn{border: 1px solid #a98a65;background: #a98a65;color: #fff;border-radius:30px;font-size: 15px;padding: 5px 10px;margin-left: 10px;cursor: pointer;}
+.cnt_wrap.wait form h5{font-size:24px}
+.cnt_wrap.wait form h5 b{color:#795735;font-weight:bold;margin-right: 5px;font-size: 23px;}
+.cnt_wrap.wait .login_form{display: inline-block;}
+.cnt_wrap.wait #btn,.cnt_wrap.wait .login_form button{border: 1px solid #a98a65;background: #a98a65;color: #fff;border-radius:30px;font-size: 20px;padding: 10px 20px;cursor: pointer}
+.cnt_wrap.wait #btn:hover{color:#a98a65;border-color:#a98a65;background: #fff;}
+.cnt_wrap.wait .login_form button{background: #d67c49;border-color: #d67c49;}
+.cnt_wrap.wait .table_scroll{overflow: auto;height: 150px;border-bottom:1px solid #a98a65;margin-top: 35px;}
+.cnt_wrap.wait .aaa{margin:0 auto;width: 100%;}
+.cnt_wrap.wait .aaa th{font-size: 17px;padding:10px 15px; position: sticky;background: #a98a65;color: #fff;border:1px solid #a98a65}
+.cnt_wrap.wait .aaa td{border:1px solid #a98a65;font-size: 17px;padding:10px 15px}
+.cnt_wrap.wait .aaa:last-child td{border-bottom: none;}
+.cnt_wrap.wait .aaa thead{position: sticky;top:0;border-top:1px solid #a98a65;border-bottom:1px solid #a98a65;}
+.cnt_wrap.play > h5{font-size: 20px;padding-bottom: 7px;}

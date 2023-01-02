@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.board.teamBoardMapper">
+
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ정길시작ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+	
+	<!-- 메인에 출력될 기본정보를 가져옴 -->
+	<select id="list" resultType="pp.pp.portfolio.team.board.BoardVO"> 
+		select * from projectdataro.pboard where board_name = '여행게시판'
+			<if test ="stype != null or sword != null"> 
+				<if test ="stype == 'title'">
+				  and title like '%${sword}%'
+				</if>
+				<if test ="stype == 'id'">
+				  and id like '%${sword}%'
+				</if>
+			</if>
+			<if test = "stag != '' and stag != null">
+				and board_no in (select board_no from projectdataro.pcategory where hashtag_no = #{stag} and board_name='여행게시판')
+			</if>
+			order by writedate desc 
+			limit ${startIdx}, ${pageRow}
+	</select>
+	
+	<!-- 메인에 출력 -->
+	
+		<!-- 게시물사진 -->
+	<select id ="getTravPic" resultType="pp.pp.portfolio.team.util.FileVO" parameterType="int">
+		select filename_server from projectdataro.pfile where board_no = #{board_no} limit 1;
+	</select>
+	
+		<!-- 댓글수 -->
+	<select id ="commentCount" parameterType="int" resultType="int">
+		select count(reply_no) from projectdataro.preply where board_no = #{board_no};
+	</select>
+	
+		<!-- 좋아요수 -->
+	<select id ="thumbsUp" parameterType="int" resultType="int">
+		select count(*) from projectdataro.plike where board_no = #{board_no};
+	</select>
+	
+		<!-- 해당하는 코스 -->
+	<select id ="place" resultType="pp.pp.portfolio.team.map.MapVO" parameterType="int">
+		select place_name from projectdataro.pmap where board_no = #{board_no}
+	</select>
+	
+		<!-- 해쉬태그 -->
+	<select id ="getHashTags" resultType="pp.pp.portfolio.team.util.CategoryVO" parameterType="int">
+		select hashtag_name from projectdataro.pcategory pc right join projectdataro.phashtag ph on pc.hashtag_no = ph.hashtag_no where pc.board_no= #{board_no};
+	</select>
+	
+	<select id ="total" resultType="int">
+      select count(*) from projectdataro.pboard
+   </select>  
+
+
+	<!-- 내가 쓴 글(마이페이지) -->
+	<select id="myList1" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.board.BoardVO">
+		select * from projectdataro.pboard 
+		where member_no = #{member_no} and (title like '%${sword}%') 
+		order by writedate desc 
+		limit ${startIdx}, ${pageRow}
+	</select>
+	<select id="count1" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="java.lang.Integer">
+		select count(*) from projectdataro.pboard 
+		where member_no=#{member_no} and (title like '%${sword}%') 
+	</select>
+	
+	 <!-- 내가 쓴 댓글(마이페이지) -->
+ 	<select id="myList2" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.board.BoardVO">
+		select r.member_no, r.board_no, b.title, r.board_name, r.content, r.reply_writedate 
+		from projectdataro.preply r join projectdataro.pboard b on r.board_no = b.board_no 
+		where r.member_no = #{member_no} and (r.content like '%${sword}%') 
+		order by reply_writedate desc 
+		limit  ${startIdx}, ${pageRow}
+	</select>
+	<select id="count2" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="java.lang.Integer">
+		select count(*) from projectdataro.preply r join projectdataro.pboard b 
+		on r.board_no = b.board_no 
+		where r.member_no = #{member_no} and (r.content LIKE '%${sword}%') 
+	</select> 
+	
+	
+	<!-- 내가 좋아요 누른 게시물(마이페이지) -->
+	<select id="myList3" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.board.BoardVO">
+		select l.board_name, l.board_no, b.title, b.viewcount 
+		from projectdataro.plike l join projectdataro.pboard b on l.board_name = b.board_name and l.board_no = b.board_no 
+		where l.member_no = #{member_no} and (title like '%${sword}%') 
+		order by viewcount desc 
+		limit  ${startIdx}, ${pageRow}
+	</select>
+	<select id="count3" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="java.lang.Integer">
+		select count(*) from projectdataro.plike l join projectdataro.pboard b 
+		on l.board_name = b.board_name and l.board_no = b.board_no 
+		where l.member_no = #{member_no} and (title like '%${sword}%')
+	</select> 
+	
+	
+	<!-- 내가 받은 쪽지(마이페이지) -->
+	<select id="myList4" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="pp.pp.portfolio.team.message.MessageVO">
+		select 
+    		m.nickname,
+    		m.id,
+    		me.message_content, 
+    		me.senddate,
+    		me.message_no,
+    		me.send_member_no,
+    		me.receive_member_no
+		from projectdataro.pmessage me join projectdataro.pmember m  
+		on m.member_no = me.send_member_no where receive_member_no=#{receive_member_no} 
+		<if test="stype != null and stype != ''">
+			<if test="stype != 'all'">
+				and (${stype} LIKE '%${sword}%')
+			</if>
+			<if test="stype == 'all'">
+	    		and (m.nickname LIKE '%${sword}%' OR me.message_content LIKE '%${sword}%')
+	    	</if>
+		</if> 
+		order by me.senddate DESC 
+		LIMIT  ${startIdx},${pageRow};
+	</select>
+	<select id="count4" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+		from projectdataro.pmessage me join projectdataro.pmember m 
+		on m.member_no = me.send_member_no where receive_member_no=#{receive_member_no} 
+		<if test="stype != null and stype != ''">
+			<if test="stype != 'all'">
+				and (${stype} LIKE '%${sword}%')
+			</if>
+			<if test="stype == 'all'">
+	    		and (m.nickname LIKE '%${sword}%' OR me.message_content LIKE '%${sword}%')
+	    	</if>
+		</if>
+	</select>
+	
+	
+	<!-- 내가 보낸 쪽지(마이페이지) -->
+	<select id="myList5" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="pp.pp.portfolio.team.message.MessageVO">
+		select 
+    		m.nickname,
+    		m.id,
+    		me.message_content, 
+    		me.senddate,
+    		me.message_no
+		from projectdataro.pmessage me join projectdataro.pmember m  
+		on m.member_no = me.receive_member_no where send_member_no=#{send_member_no} 
+		<if test="stype != null and stype != ''">
+			<if test="stype != 'all'">
+				and (${stype} LIKE '%${sword}%')
+			</if>
+			<if test="stype == 'all'">
+	    		and (m.nickname LIKE '%${sword}%' OR me.message_content LIKE '%${sword}%')
+	    	</if>
+		</if> 
+		ORDER BY me.senddate DESC 
+		LIMIT  ${startIdx},${pageRow};
+	</select>
+	<select id="count5" parameterType="pp.pp.portfolio.team.message.MessageVO" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+		from projectdataro.pmessage me join projectdataro.pmember m  
+		on m.member_no = me.receive_member_no where send_member_no=#{send_member_no} 
+		<if test="stype != null and stype != ''">
+			<if test="stype != 'all'">
+				and (${stype} LIKE '%${sword}%')
+			</if>
+			<if test="stype == 'all'">
+	    		and (m.nickname LIKE '%${sword}%' OR me.message_content LIKE '%${sword}%')
+	    	</if>
+		</if> 
+	</select> 
+	
+	
+	<!-- 내가 참여한 채팅방(마이페이지) -->
+	<select id="myList6" parameterType="pp.pp.portfolio.team.room.RoomVO" resultType="pp.pp.portfolio.team.room.RoomVO">
+		select p.board_name, p.room_no, p.room_title, p.roommaker_id, p.room_startdate
+		from projectdataro.proom p, projectdataro.proommember pr 
+		where p.room_no = pr.room_no 
+		and pr.room_participant_no = #{room_participant_no};
+	</select>
+	
+	
+	
+	
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ정길ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+	
+	
+	
+	
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ진경ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+	
+	<!-- 여행글쓰기 from 진경 -->
+	<insert id="insert" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		INSERT 
+			INTO projectdataro.pboard(board_name,id,member_no,title,viewcount,writedate,updatedate)
+		VALUES (#{board_name},#{id},#{member_no},#{title},#{viewcount},NOW(),NOW())
+		<selectKey resultType="int" keyProperty="board_no" order ="AFTER"> 
+				SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<!-- 여행수정화면 불러오기 -->
+	<select id="updateView" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.board.BoardVO">
+		select board_no,member_no,title
+		from projectdataro.pboard
+		where board_no = #{board_no};
+	</select>
+	<select id="updateCourse" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.map.MapVO">
+		select bc.content, m.*
+		from projectdataro.pboardcourse bc, projectdataro.pmap m 
+		where bc.board_no = m.board_no and bc.course_no = m.course_no and bc.board_no=#{board_no};
+	</select>
+	<select id="updateCategory" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.util.CategoryVO">
+		select hashtag_no
+		from projectdataro.pcategory
+		where board_no = #{board_no} and hashtag_no is not null;
+	</select>
+	<select id="updateCategory2" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.util.CategoryVO">
+		<!-- 
+		select region_no
+		from projectdataro.pcategory
+		where board_no = #{board_no} and region_no is not null;
+		 -->
+		SELECT c.region_no,c.board_no,r.region_name
+		FROM projectdataro.pregion r,projectdataro.pcategory c 
+		WHERE board_no = #{board_no} and r.region_no = c.region_no
+	</select>
+	
+	<!-- 여행글쓰기 타이들 수정 -->
+	<update id="titleEdit" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		UPDATE projectdataro.pboard SET title=#{title},updatedate=NOW()
+		WHERE board_no=#{board_no} and board_name="여행게시판";
+	</update>
+	
+	<!-- 여행코스 등록 -->
+	<insert id="insertCourse" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		INSERT 
+			INTO projectdataro.pboardcourse(board_name,board_no,content,course_no)
+		VALUES (#{board_name},#{board_no},#{content},#{course_no})
+	</insert>
+
+	<!-- 여행코스 수정(삭제후다시등록)/ 진경끝 -->
+	<delete id="courseEdit" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		delete FROM projectdataro.pboardcourse where board_no=${board_no};
+	</delete>
+
+	<!-- 정현 -->
+	<select id="view2" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.board.BoardVO">
+		SELECT *,
+		 (SELECT COUNT(*) FROM projectdataro.plike WHERE board_name = #{board_name} AND board_no = #{board_no}) AS likecount,
+		 (SELECT COUNT(*) FROM projectdataro.pdislike WHERE board_name = #{board_name} AND board_no = #{board_no}) AS dislikecount
+		FROM projectdataro.pboard WHERE board_name = #{board_name} AND board_no = #{board_no} 
+	</select>
+	
+	
+	<!-- 조회수 증가 -->
+	<update id="updateViewcount2" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		UPDATE projectdataro.pboard
+		SET viewcount = viewcount + 1
+		WHERE board_name = #{board_name} AND board_no = #{board_no}
+	</update>
+		
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		DELETE FROM projectdataro.pboard WHERE board_name = #{board_name} AND board_no = #{board_no}
+	</delete>
+	
+	<!-- 게시글 좋아요 버튼 누르기 -->
+	<insert id="clickBoardLike" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		INSERT INTO projectdataro.plike (
+			board_name, board_no, member_no
+		) VALUES (
+			#{board_name}, #{board_no}, #{member_no}
+		)
+	</insert>
+	
+	<!-- 좋아요 누른것 취소 -->
+	<delete id="likeBack" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		DELETE FROM projectdataro.plike WHERE board_name = #{board_name} AND board_no = #{board_no} AND member_no = #{member_no}
+	</delete>
+	
+	
+	<!-- 게시글 싫어요 버튼 누르기 -->
+	<insert id="clickDislike" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		INSERT INTO projectdataro.pdislike (
+			board_name, board_no, member_no
+		) VALUES (
+			#{board_name}, #{board_no}, #{member_no}
+		)
+	</insert>
+	
+	<!-- 싫어요 누른것 취소 -->
+	<delete id="dislikeBack" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		DELETE FROM projectdataro.pdislike WHERE board_name = #{board_name} AND board_no = #{board_no} AND member_no = #{member_no}
+	</delete>
+	
+	<!-- 댓글 좋아요 버튼 누르기 -->
+	<insert id="clickReplyLike" parameterType="pp.pp.portfolio.team.board.BoardVO">
+		INSERT INTO projectdataro.plike (
+			board_name, board_no, reply_no, member_no
+		) VALUES (
+			#{board_name}, #{board_no}, #{reply_no}, #{member_no}
+		)
+	</insert>
+	
+	<!-- 카테고리 가져오기 -->
+	<select id="categoryList" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.util.CategoryVO">
+		SELECT projectdataro.pcategory.hashtag_no, projectdataro.phashtag.hashtag_name, projectdataro.pcategory.region_no, projectdataro.pregion.region_name  
+		FROM projectdataro.pcategory LEFT OUTER JOIN projectdataro.phashtag ON projectdataro.pcategory.hashtag_no = projectdataro.phashtag.hashtag_no 
+					   LEFT OUTER JOIN projectdataro.pregion ON projectdataro.pcategory.region_no = projectdataro.pregion.region_no 
+		WHERE projectdataro.pcategory.board_name = #{board_name} AND projectdataro.pcategory.board_no = #{board_no}
+	</select>
+	
+	<!-- 좋아요 버튼 눌렀는지 확인 -->
+	<select id="likeCheck" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="int">
+		SELECT COUNT(*) FROM projectdataro.plike WHERE board_name = #{board_name} AND board_no = #{board_no} AND member_no = #{member_no}
+	</select>
+	
+	<!-- 싫어요 버튼 눌렀는지 확인 -->
+	<select id="dislikeCheck" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="int">
+		SELECT COUNT(*) FROM projectdataro.pdislike WHERE board_name = #{board_name} AND board_no = #{board_no} AND member_no = #{member_no}
+	</select>
+
+	<select id ="getImgOfWriter" resultType="pp.pp.portfolio.team.member.MemberVO" parameterType="int">
+      select m_filename_server from projectdataro.pboard b join projectdataro.pmember m 
+      on b.member_no = m.member_no 
+      where board_no = #{board_no}; 
+   </select>
+   
+</mapper>

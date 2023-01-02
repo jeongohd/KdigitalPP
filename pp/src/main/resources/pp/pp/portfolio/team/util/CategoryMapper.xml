@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.util.CategoryMapper">
+
+	<!-- 해쉬코드 등록/진경 -->
+ 	<insert id="insert" parameterType="pp.pp.portfolio.team.util.CategoryVO" >
+		insert into projectdataro.pcategory(hashtag_no,board_name,board_no)
+		VALUES (#{hashtag_no},#{board_name},#{board_no});
+	</insert>
+	
+	<!-- 해쉬코드 가져오기(출력)/진경 -->
+	<select id="hash" resultType="pp.pp.portfolio.team.util.CategoryVO">
+		select * from projectdataro.phashtag order by hashtag_no
+	</select>
+	
+	<!-- 해쉬,지역코드 수정(삭제후 다시 등록하는방식)/진경 -->
+	<delete id="hashRegionEdit" parameterType="pp.pp.portfolio.team.util.CategoryVO">
+		delete from projectdataro.pcategory where board_no=#{board_no}
+	</delete>
+
+	<!-- 글쓰기 지역정보 대분류 출력/진경 -->
+	<select id="regionSelect" resultType="pp.pp.portfolio.team.util.CategoryVO">
+	 	select distinct substring(region_name,1,2) AS region_name from projectdataro.pregion
+	</select>
+	<!-- 글쓰기 지역정보 소분류 출력/진경 -->
+	<select id="regionDetail" parameterType="String" resultType="pp.pp.portfolio.team.util.CategoryVO">
+		select region_no,substring(region_name,4) AS region_name from projectdataro.pregion where region_name like "${rs}%";
+	</select>
+	<!-- 글쓰기 지역번호 카테고리테이블에 등록/진경 -->
+	<insert id="regionInsert" parameterType="pp.pp.portfolio.team.util.CategoryVO">
+		insert into projectdataro.pcategory(board_name,board_no,region_no)
+		values (#{board_name},#{board_no},#{region_no})
+	</insert>
+	
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="omok">
+	
+	<!-- 회원등록 -->
+	<insert id="insert">
+		insert into portfolio.omok_users (id, pw, win, lose)
+		values 
+		(#{id}, #{pw}, 0, 0)
+	</insert>
+	
+	<!-- 중복체크시 사용 -->
+	<select id="count" resultType="int">
+		select count(*) from portfolio.omok_users where id like '${id}'
+	</select>
+	
+	<!-- 로그인 할 때, 아이디 패스워드 확인용 -->
+	<select id="loginCount" resultType="int">
+		select count(*) from portfolio.omok_users where id like '${id}' and pw like '${pw}'
+	</select>
+	
+	<select id="rank"  resultType="pp.pp.portfolio.omok.LoginDTO">
+		select * from (
+				select a.*, @rownum:=@rownum+1 rnum from(
+					select * from portfolio.omok_users 
+					where no not like 0 order by win desc, lose asc
+				) a ) b
+				where (@rownum:=0)=0 and rnum between 1 and 10 
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.room.RoomMapper">
+
+	<!-- 진경/방상세보기 -->
+	<select id="view" parameterType="int" resultType="pp.pp.portfolio.team.room.RoomVO">
+		select * from projectdataro.proom where room_no =${room_no}
+	</select>
+
+	<!-- 정현 -->
+	<insert id="makeRoom" parameterType="pp.pp.portfolio.team.room.RoomVO">
+		INSERT INTO projectdataro.proom (
+			board_name, board_no, roommaker_id, room_title, room_content, room_startdate, room_enddate, room_makedate
+			<if test="room_pwd != null and room_pwd != ''">
+			, room_pwd
+			</if>
+		) VALUES (
+			#{board_name}, #{board_no}, #{roommaker_id}, #{room_title}, #{room_content}, #{room_startdate}, #{room_enddate}, now()
+			<if test="room_pwd != null and room_pwd != ''">
+			, md5(#{room_pwd})
+			</if>
+		)
+		<selectKey keyProperty="room_no" resultType="int" order="AFTER">
+		 SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- 게시글에 해당하는 방 리스트  -->
+	<select id="list2" parameterType="pp.pp.portfolio.team.board.BoardVO" resultType="pp.pp.portfolio.team.room.RoomVO">
+		SELECT a.*, b.room_participant_no 
+		FROM (
+			SELECT projectdataro.proom.board_name, projectdataro.proom.board_no, roommaker_id, room_title, room_content, projectdataro.proom.room_startdate, projectdataro.proom.room_enddate, projectdataro.proom.room_pwd, count.room_no, room_participant_count 
+			FROM projectdataro.proom, 
+			(SELECT COUNT(*) room_participant_count, room_no FROM projectdataro.proommember GROUP BY room_no) count 
+			WHERE projectdataro.proom.room_no = count.room_no AND projectdataro.proom.board_name = #{board_name} AND projectdataro.proom.board_no = #{board_no}) a 
+		LEFT OUTER JOIN 
+			(SELECT * FROM projectdataro.proommember WHERE room_participant_no = #{login_member_no}) b 
+		ON a.room_no=  b.room_no	
+	</select>
+	
+	<!-- 비밀방 pwd 체크 -->
+	<select id="pwdCheck" parameterType="pp.pp.portfolio.team.room.RoomVO" resultType="int">
+		SELECT COUNT(*) FROM projectdataro.proom
+		WHERE board_name = #{board_name} AND board_no = #{board_no} AND room_no = #{room_no} AND room_pwd = md5(#{room_pwd})
+	</select>
+	
+	<!-- 방에 입장 -->
+	<insert id="enterRoom" parameterType="pp.pp.portfolio.team.room.RoomVO" >
+		INSERT INTO projectdataro.proommember (
+			room_no, room_participant_no
+		) VALUES (
+			#{room_no}, #{room_participant_no}
+		)
+	</insert>	
+	
+	<!-- 내가 참여한 방인지 확인, 참여했다면 count가 1이 나올 것 -->
+	<select id="checkRoom" parameterType="pp.pp.portfolio.team.room.RoomVO" resultType="int">
+		SELECT COUNT(*) FROM projectdataro.proommember WHERE room_no = #{room_no} AND room_participant_no = #{room_participant_no}
+	</select>
+	
+
+</mapper>

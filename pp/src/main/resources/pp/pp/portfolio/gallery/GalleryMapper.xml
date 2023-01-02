@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pp.pp.portfolio.gallery.GalleryMapper">
+	<insert id='insert' parameterType="pp.pp.portfolio.gallery.GalleryVO">
+		INSERT INTO portfolio.gallery (title,content,regdate,viewcount,filename_org,filename_real)
+		VALUES (#{title},#{content},NOW(),0,#{filename_org},#{filename_real})
+	</insert>
+	
+	<select id="galleryList" parameterType="pp.pp.portfolio.gallery.GalleryVO" resultType="pp.pp.portfolio.gallery.GalleryVO">
+	 	SELECT * FROM portfolio.gallery
+	 	<where>
+	 			<if test="sword != '' and sword != null ">
+	 				title LIKE '%${sword}%' OR content LIKE '%${sword}%'
+	 			</if>
+	 	</where>
+	 	ORDER BY regdate desc
+	</select>
+	
+	<update id="update" parameterType="pp.pp.portfolio.gallery.GalleryVO">
+		UPDATE portfolio.gallery SET 
+			title=#{title},content=#{content},regdate=NOW(),filename_org=#{filename_org},filename_real =#{filename_real}
+			<if test="filename_chk == 1">
+				,filename_org = Null,filename_real=Null
+			</if>
+		WHERE no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM portfolio.gallery WHERE no = #{no}
+	</delete>
+	
+	<select id="view" parameterType="java.lang.Integer" resultType="pp.pp.portfolio.gallery.GalleryVO">
+		SELECT * FROM portfolio.gallery WHERE no = #{no} 
+	</select>
+	
+	<update id="updateViewcount" parameterType="java.lang.Integer">
+		UPDATE portfolio.gallery set viewcount=viewcount+1 WHERE no = #{no} 
+	</update>
+	
+	<select id="count" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM portfolio.gallery;
+	</select>
+
+</mapper>

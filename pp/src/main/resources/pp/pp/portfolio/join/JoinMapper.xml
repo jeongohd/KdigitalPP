@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pp.pp.portfolio.join.JoinMapper">
+	<insert id="insert" parameterType="pp.pp.portfolio.join.JoinVO">
+		INSERT INTO portfolio.join (id,pwd,name,gender,birthday,hp,zipcode,addr1,addr2,regdate)
+		VALUES (#{id},#{pwd},#{name},#{gender},#{birthday},#{hp},#{zipcode},#{addr1},#{addr2},NOW())
+	</insert>
+	
+	<select id="idCheck" parameterType="string" resultType="int">
+		SELECT count(*) FROM portfolio.join WHERE id = #{id}
+	</select>
+	
+	<select id="loginCheck" parameterType="pp.pp.portfolio.join.JoinVO" resultType="pp.pp.portfolio.join.JoinVO">
+		SELECT * FROM portfolio.join WHERE id = #{id} AND pwd = #{pwd};
+	</select>
+	
+	<select id="findId" parameterType="pp.pp.portfolio.join.JoinVO" resultType="String">
+		SELECT id FROM portfolio.join WHERE name = #{name} AND hp = #{hp}
+	</select>
+	
+	<select id="findPwd" parameterType="pp.pp.portfolio.join.JoinVO" resultType="pp.pp.portfolio.join.JoinVO">
+		SELECT * FROM portfolio.join WHERE name = #{name} AND hp = #{hp} AND id=#{id}
+	</select>
+	
+	<update id="updateTempPwd" parameterType="pp.pp.portfolio.join.JoinVO">
+		UPDATE portfolio.join SET pwd = #{pwd} WHERE name = #{name} AND hp = #{hp} AND id=#{id}
+	</update>
+</mapper>

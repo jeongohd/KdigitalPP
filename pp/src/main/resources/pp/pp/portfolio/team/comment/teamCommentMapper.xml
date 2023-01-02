@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pp.pp.portfolio.team.comment.teamCommentMapper">
+	
+	<!-- 댓글 입력 -->
+	<insert id="insert" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		INSERT INTO projectdataro.preply (
+			content, member_no, board_no, reply_writedate ,reply_no, board_name,gno,member_id )
+			 VALUES 
+			( #{content}, #{member_no}, #{board_no},NOW(),#{reply_no},'자유게시판',#{gno},#{member_id} )
+		<selectKey keyProperty="board_no" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- 댓글, 답글 총 갯수 -->
+	<select id="count" parameterType="pp.pp.portfolio.team.comment.CommentVO" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM projectdataro.preply
+		WHERE board_no = #{board_no} AND board_name = '자유게시판'
+	</select>
+	
+	<!-- 댓글 불러오기 -->
+	<select id="list" parameterType="pp.pp.portfolio.team.comment.CommentVO" resultType="pp.pp.portfolio.team.comment.CommentVO">
+		SELECT
+		 *
+		 , (select id from projectdataro.pmember where member_no = A.member_no) as id
+		 , (select count(reply_no) from projectdataro.preply B where B.board_no = A.board_no and board_name ='자유게시판'
+		  	and  ono > 0 and B.member_no = A.member_no) as replycount
+		FROM projectdataro.preply A
+		WHERE A.board_no = #{board_no} AND A.board_name = '자유게시판' and A.ono = 0
+		ORDER BY A.reply_writedate DESC
+		LIMIT  ${startIdx},${pageRow}
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM projectdataro.preply WHERE reply_no= #{reply_no}
+	</delete>
+	
+	<!-- 댓글 수정 -->
+	<update id="modify" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		UPDATE projectdataro.preply SET 
+		content = #{content}
+		, reply_updatedate = now()
+		WHERE reply_no = #{reply_no}
+	</update>
+	
+	
+	
+	<!-- 여기서부턴 답글 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+	
+	<!-- 답글 목록 가져오기 -->
+	<select id="commentList" parameterType="pp.pp.portfolio.team.comment.CommentVO" resultType="pp.pp.portfolio.team.comment.CommentVO">
+		SELECT
+		 *
+		FROM projectdataro.preply A
+		WHERE board_name = '자유게시판' AND board_no = #{board_no} AND gno = #{gno} AND ono > 0
+		ORDER BY gno DESC, reply_writedate DESC
+		LIMIT ${startIdx}, ${pageRow}
+	</select>
+	
+	<!-- gno를 reply_no로 업데이트 -->
+	<update id="gnoUpdate" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		UPDATE projectdataro.preply SET gno = #{gno} WHERE reply_no = #{gno}
+	</update>
+	
+	<!-- 답글 달 때, 부모의 gno와 같고, 부모의 ono보다 큰 ono를 ono+1로 업뎃 -->
+	<update id="onoUpdate" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		UPDATE projectdataro.preply SET ono = ono+1 WHERE gno = #{gno} AND ono > #{ono}	
+	</update>
+	
+	<!-- 댓글에 답글달기 -->
+	<insert id="reply" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		INSERT INTO projectdataro.preply (
+			board_name, board_no, room_no, member_id, content, member_no, reply_likecount, reply_writedate, gno, ono
+		) VALUES (
+			#{board_name}, #{board_no}, #{room_no}, #{member_id}, #{content}, #{member_no}, 0, NOW(), #{gno}, #{ono}
+		)
+	</insert>
+	
+	<!-- 댓글 ono = 0 총 개수 (답글이 아닌 원댓글)-->
+	<select id="pagingCount" resultType="int" parameterType="pp.pp.portfolio.team.comment.CommentVO">
+		SELECT COUNT(*) FROM projectdataro.preply WHERE board_name = '자유게시판'
+		AND board_no = #{board_no} AND ono = 0
+	</select>
+	
+	
+</mapper>
